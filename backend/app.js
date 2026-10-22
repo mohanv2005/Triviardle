@@ -44,23 +44,26 @@ app.get('/quiz' , (req,res) => {
   res.json(quizData);
 });
 
-let nextId;
 
-if (quizData.length > 0) {
-  nextId = Math.max(
-        ...quizData
-            .filter(item => item && typeof item === 'object' && !Array.isArray(item))
-            .map(item => item.id ?? 0)
-    ) + 1;
-} else {
-  nextId = 1;
-}
 
 app.post('/quiz', (req, res) => {
+
+  let nextId;
+
+  if (quizData.length > 0) {
+    nextId = Math.max(
+          ...quizData
+              .filter(item => item && typeof item === 'object' && !Array.isArray(item))
+              .map(item => item.id ?? 0)
+      ) + 1;
+  } else {
+    nextId = 1;
+  }
+
   console.log(req.body);
-  if(!req.body.category) 
+  if(!req.body.category || !req.body.subCategory || !req.body.answer || !req.body.questions) 
     return res.status(400).json({
-        message: "invalid request, category is required"
+        message: "invalid request, all fields are required"
     });
   const newQuiz = 
     {
